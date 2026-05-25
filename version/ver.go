@@ -3,7 +3,7 @@
  *  Use of this source code is governed by a BSD 3-Clause license that can be found in the LICENSE file.
  */
 
-package validate
+package version
 
 import (
 	"fmt"
@@ -23,7 +23,7 @@ func (v Version) String() string {
 	return fmt.Sprintf("v%d.%d.%d", v.Major, v.Minor, v.Patch)
 }
 
-func ParseVersion(v string) (*Version, error) {
+func Parse(v string) (*Version, error) {
 	data := rex.FindStringSubmatch(v)
 	if len(data) != 4 {
 		return nil, fmt.Errorf("invalid format: %s", v)
@@ -46,9 +46,9 @@ func ParseVersion(v string) (*Version, error) {
 	return result, nil
 }
 
-func CompareVersion(v1, v2 string) int {
-	a, e1 := ParseVersion(v1)
-	b, e2 := ParseVersion(v2)
+func Compare(v1, v2 string) int {
+	a, e1 := Parse(v1)
+	b, e2 := Parse(v2)
 	switch true {
 	case e1 != nil && e2 != nil:
 		return 0
@@ -73,14 +73,14 @@ func CompareVersion(v1, v2 string) int {
 	}
 }
 
-func MaxVersion(versions ...string) *Version {
+func GetMax(versions ...string) *Version {
 	result := "v0.0.0"
 	for _, ver := range versions {
-		if CompareVersion(result, ver) < 0 {
+		if Compare(result, ver) < 0 {
 			result = ver
 		}
 	}
-	v, err := ParseVersion(result)
+	v, err := Parse(result)
 	if err != nil {
 		return &Version{
 			Major: 0,
