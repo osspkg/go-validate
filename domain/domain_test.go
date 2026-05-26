@@ -1,9 +1,9 @@
 /*
- *  Copyright (c) 2024 Mikhail Knyazhev <markus621@yandex.com>. All rights reserved.
+ *  Copyright (c) 2024-2026 Mikhail Knyazhev <markus621@yandex.com>. All rights reserved.
  *  Use of this source code is governed by a BSD 3-Clause license that can be found in the LICENSE file.
  */
 
-package validate
+package domain
 
 import (
 	"fmt"
@@ -78,8 +78,8 @@ func TestUnit_GetDomainLevel(t *testing.T) {
 	}
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("Case %d", i), func(t *testing.T) {
-			if got := GetDomainLevel(tt.args.s, tt.args.level); got != tt.want {
-				t.Errorf("GetDomainLevel() = %v, want %v", got, tt.want)
+			if got := Level(tt.args.s, tt.args.level); got != tt.want {
+				t.Errorf("Level() = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -91,7 +91,7 @@ func Benchmark_GetDomainLevel(b *testing.B) {
 
 	b.RunParallel(func(p *testing.PB) {
 		for p.Next() {
-			GetDomainLevel("www.domain.ltd.", 2)
+			Level("www.domain.ltd.", 2)
 		}
 	})
 }
@@ -102,7 +102,7 @@ func Benchmark_IsValidDomain(b *testing.B) {
 
 	b.RunParallel(func(p *testing.PB) {
 		for p.Next() {
-			IsValidDomain("www.domain.ltd.")
+			IsValid("www.domain.ltd.")
 		}
 	})
 }
@@ -111,7 +111,7 @@ func Benchmark_NormalizeDomainBytes(b *testing.B) {
 	b.ReportAllocs()
 	b.RunParallel(func(p *testing.PB) {
 		for p.Next() {
-			NormalizeDomainBytes([]byte("  WWW.Domain.ltd    "))
+			NormalizeBytes([]byte("  WWW.Domain.ltd    "))
 		}
 	})
 }
@@ -120,7 +120,7 @@ func Benchmark_NormalizeDomain(b *testing.B) {
 	b.ReportAllocs()
 	b.RunParallel(func(p *testing.PB) {
 		for p.Next() {
-			NormalizeDomain("  WWW.Domain.ltd    ")
+			Normalize("  WWW.Domain.ltd    ")
 		}
 	})
 }
@@ -189,13 +189,13 @@ func TestUnit_NormalizeDomain(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := NormalizeDomain(tt.domain)
+			got, err := Normalize(tt.domain)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("NormalizeDomain() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Normalize() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if got != tt.want {
-				t.Errorf("NormalizeDomain() got = %v, want %v", got, tt.want)
+				t.Errorf("Normalize() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -230,8 +230,8 @@ func TestUnit_CountDomainLevels(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CountDomainLevels(tt.arg); got != tt.want {
-				t.Errorf("CountDomainLevels() = %v, want %v", got, tt.want)
+			if got := CountLevels(tt.arg); got != tt.want {
+				t.Errorf("CountLevels() = %v, want %v", got, tt.want)
 			}
 		})
 	}

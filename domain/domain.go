@@ -1,9 +1,9 @@
 /*
- *  Copyright (c) 2024 Mikhail Knyazhev <markus621@yandex.com>. All rights reserved.
+ *  Copyright (c) 2024-2026 Mikhail Knyazhev <markus621@yandex.com>. All rights reserved.
  *  Use of this source code is governed by a BSD 3-Clause license that can be found in the LICENSE file.
  */
 
-package validate
+package domain
 
 import (
 	"fmt"
@@ -13,12 +13,12 @@ import (
 
 var dot = byte('.')
 
-func GetDomainLevel(s string, level int) string {
+func Level(s string, level int) string {
 	if level == 0 {
 		return "."
 	}
 	var err error
-	s, err = NormalizeDomain(s)
+	s, err = Normalize(s)
 	if err != nil {
 		return "."
 	}
@@ -40,15 +40,15 @@ func GetDomainLevel(s string, level int) string {
 	return s[pos:]
 }
 
-func CountDomainLevels(s string) int {
-	ss, err := NormalizeDomain(s)
+func CountLevels(s string) int {
+	ss, err := Normalize(s)
 	if err != nil {
 		return 0
 	}
 	return strings.Count(ss, ".")
 }
 
-func IsValidDomain(s string) bool {
+func IsValid(s string) bool {
 	d, b := 0, []byte(s)
 	for i := 0; i < len(b); i++ {
 		if b[i] == '.' {
@@ -71,15 +71,15 @@ func IsValidDomain(s string) bool {
 	return true
 }
 
-func NormalizeDomain(s string) (string, error) {
-	b, err := NormalizeDomainBytes([]byte(s))
+func Normalize(s string) (string, error) {
+	b, err := NormalizeBytes([]byte(s))
 	if err != nil {
 		return "", err
 	}
 	return string(b), nil
 }
 
-func NormalizeDomainBytes(b []byte) ([]byte, error) {
+func NormalizeBytes(b []byte) ([]byte, error) {
 	if len(b) < 1 {
 		return nil, fmt.Errorf("invalid domain")
 	}

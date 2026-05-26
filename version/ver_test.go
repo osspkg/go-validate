@@ -1,9 +1,9 @@
 /*
- *  Copyright (c) 2024 Mikhail Knyazhev <markus621@yandex.com>. All rights reserved.
+ *  Copyright (c) 2024-2026 Mikhail Knyazhev <markus621@yandex.com>. All rights reserved.
  *  Use of this source code is governed by a BSD 3-Clause license that can be found in the LICENSE file.
  */
 
-package validate
+package version
 
 import (
 	"reflect"
@@ -40,13 +40,13 @@ func TestUnit_ParseVersion(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ParseVersion(tt.args)
+			got, err := Parse(tt.args)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseVersion() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("Parse() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ParseVersion() got = %v, want %v", got, tt.want)
+				t.Errorf("Parse() got = %v, want %v", got, tt.want)
 			}
 		})
 	}
@@ -76,8 +76,8 @@ func TestUnit_MaxVersion(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if gotOut := MaxVersion(tt.vers...); gotOut.String() != tt.wantOut {
-				t.Errorf("MaxVersion() = %v, want %v", gotOut, tt.wantOut)
+			if gotOut := GetMax(tt.vers...); gotOut.String() != tt.wantOut {
+				t.Errorf("GetMax() = %v, want %v", gotOut, tt.wantOut)
 			}
 		})
 	}
