@@ -12,7 +12,7 @@ import (
 )
 
 func TestValidator_Register(t *testing.T) {
-	v := New()
+	v := Global()
 	if err := v.Register(Rule{}); err == nil {
 		t.Fatalf("Register(): empty rule")
 	}
@@ -53,7 +53,7 @@ Benchmark_Validate-24    	 7162855	       165.8 ns/op	      48 B/op	       3 all
 */
 func Benchmark_Validate(b *testing.B) {
 	v := New()
-	v.Register(
+	err := v.Register(
 		Rule{
 			Name: "eq",
 			Handle: HandlerFunc(func(ctx context.Context, value any, opts ...any) error {
@@ -75,6 +75,9 @@ func Benchmark_Validate(b *testing.B) {
 			}),
 		},
 	)
+	if err != nil {
+		b.Fatal(err)
+	}
 
 	ctx := context.Background()
 
